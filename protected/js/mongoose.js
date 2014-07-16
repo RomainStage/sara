@@ -3,7 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var event = new EventEmitter();
 var mongoose = require('mongoose');
 
- mongoose.connect('mongodb://romain:romain@kahana.mongohq.com:10004/ciib_stage', function(err) {
+ mongoose.createConnection('mongodb://romain:romain@kahana.mongohq.com:10004/ciib_stage', function(err) {
    if (err) { throw err; }
 });
 //****************************************************************************************************

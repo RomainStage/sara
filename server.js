@@ -12,7 +12,7 @@ fs.exists('./public/acceuil.html', function (exist) {
 
 /* Création d'un objet serveur stockant les variables et methodes */
 var server = {};
-server.port = 80;
+server.port = process.env.PORT || 3000;
 server.address = "0.0.0.0";
 
 server.receive_request = function (request, response) {
@@ -47,7 +47,7 @@ process.on('uncaughtExceptionnn', function(err) {
 
 	/* Création d'un objet serveur stockant les variables et methodes */
 	var server = {};
-	server.port = 80;
+	server.port = process.env.PORT || 3000;
 	server.address = "0.0.0.0";
 
 	// server.receive_request = function (request, response) {
