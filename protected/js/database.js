@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 //--------------------------simulation de l'objet
 // On se connecte à la base de données ne pas oubliez de lancer ~/mongo/bin/mongod dans un terminal !
 
-mongoose.createConnection('mongodb://localhost/identification', function(err) {
- // mongoose.connect('mongodb://romain:romain@kahana.mongohq.com:10004/ciib_stage', function(err) {
+//mongoose.createConnection('mongodb://localhost/identification', function(err) {
+  mongoose.connect('mongodb://romain:romain@kahana.mongohq.com:10004/ciib_stage', function(err) {
   if (err) { throw err; }
 });
 //*********************************************************************************
