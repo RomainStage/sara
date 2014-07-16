@@ -12,8 +12,8 @@ fs.exists('./public/acceuil.html', function (exist) {
 
 /* Création d'un objet serveur stockant les variables et methodes */
 var server = {};
-server.port = 1337;
-server.address = "127.0.0.1";
+server.port = 80;
+server.address = "0.0.0.0";
 
 server.receive_request = function (request, response) {
     router.route(request, response);
@@ -47,8 +47,8 @@ process.on('uncaughtExceptionnn', function(err) {
 
 	/* Création d'un objet serveur stockant les variables et methodes */
 	var server = {};
-	server.port = 1337;
-	server.address = "127.0.0.1";
+	server.port = 80;
+	server.address = "0.0.0.0";
 
 	// server.receive_request = function (request, response) {
 		// router.route(request, response);
