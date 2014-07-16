@@ -1,0 +1,18 @@
+{
+  "name": "sara",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RomainStage/sara.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RomainStage/sara/issues"
+  },
+  "homepage": "https://github.com/RomainStage/sara"
+}
