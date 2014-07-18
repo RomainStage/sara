@@ -23,7 +23,7 @@
     "phaxio": "0.0.6"   
   },
   "engines": {
-    "node": « 0.8.x »
+    "node": « 0.6.6 »
   },
   "devDependencies": {}
 }
