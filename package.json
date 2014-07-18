@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/saratek/Stage_CIIB",
   "dependencies": {
-    "mongodb": "^1.4.7",
-    "mongoose": "^3.8.13",
-    "pdfkit": "^0.6.2",
+    "mongodb": "1.4.7",
+    "mongoose": "3.8.13",
+    "pdfkit": "0.6.2",
     "phaxio": "0.0.6"   
   },
   "engines": {
-    "node": "0.8.x"
+    "node": « 0.8.x »
   },
   "devDependencies": {}
 }
