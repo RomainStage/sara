@@ -19,13 +19,8 @@
   "dependencies": {
     "mongodb": "^1.4.7",
     "mongoose": "^3.8.13",
-    "npm": "^1.4.21",
-    "open": "0.0.5",
     "pdfkit": "^0.6.2",
-    "phaxio": "0.0.6",
-    "request": "^2.37.0",
-    "add": "^2.0.6",
-    "git": "^0.1.5"
+    "phaxio": "0.0.6"   
   },
   "engines": {
     "node": "0.8.x"
