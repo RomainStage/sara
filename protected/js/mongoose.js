@@ -163,7 +163,7 @@ console.log(j);
 								}
 							}
 						}			
-		if((tabSiren[++j]) && (j < 400)){		// TODO 400todo changer la valeur de j si la requette est trop longue
+		if((tabSiren[++j]) && (j < 200)){		// TODO 400todo changer la valeur de j si la requette est trop longue
 			// filtre(that, fonc, prospect, tabSiren, paquets, ++j, progress);
 			filtre(that, fonc, prospect, tabSiren, paquets, j, progress);
 		}else{
