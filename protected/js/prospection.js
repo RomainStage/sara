@@ -33,17 +33,18 @@ exports.find_prospects = function(that, fonc, paquets){
 db.prospection(that, fonc, paquets);
 }
 //-----------------------------------------------------------------------------------------------------------
-var paquets = {};
-paquets.capitalSocial = 10000;
+// var paquets = {};
+// paquets.capitalSocial = 10000;
 // paquets.formeJuridique = "Société à responsabilité limitée";
 // paquets.formeJuridique = "Société anonyme";
-// paquets.formeJuridique = "SA ";
+// paquets.formeJuridique = "SAS";
+// paquets.formeJuridique = "Société par actions simplifiée";
 // paquets.formeJuridique = "SASU";
-// paquets.nombreEmployes = 3;
-// paquets.resultatNet = 10000;
-// paquets.chiffreAffaire = 10000;
+// paquets.nombreEmployes = 0;
+// paquets.resultatNet = 0;
+// paquets.chiffreAffaire = 0;
 // paquets.departement = 0;
-// paquets.evolution_chiffre_Affaire = "+"; 
+// paquets.evolution_chiffre_Affaire = "0"; 
 // paquets.evolution_resultat_Net =  "0";
-// exports.find_prospects(null, null, paquets);
+// exports.find_prospects(null, "ok", paquets);
  

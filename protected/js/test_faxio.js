@@ -15,13 +15,13 @@ paquets.capital = ""+capitalSocial;
 paquets.type = ""+formeJuridique;
 paquets.adresse = ""+adresse;
 if(formeJuridique && capitalSocial && nom){
-	if((formeJuridique.indexOf("Société anonyme") > -1)||((formeJuridique.indexOf("SA") > -1)&&(formeJuridique.indexOf("SARL") < 0))){
+	if((formeJuridique.indexOf("Société anonyme") > -1)||((formeJuridique.indexOf("SA") > -1)&&(formeJuridique.indexOf("SARL") < 0)&&(formeJuridique.indexOf("SASU") < 0))){
 		console.log("--------------prospection d'une SA --------------");
 		if((evolution_CA == "+")&&(evolution_RN == "+")){
 		console.log("--------------------prospection d'une sa croissante------------------");
 		pdf2(paquets, data, faxx);
 		}else{
-		console.log("prospection d'une simpele sa");
+		console.log("prospection d'une simpele sa PDF 1");
 		pdf1(paquets, data, faxx);
 		}
 	}else if((formeJuridique.indexOf("SARL") > -1)||(formeJuridique.indexOf("Société à responsabilité limitée") > -1)){
@@ -33,7 +33,7 @@ if(formeJuridique && capitalSocial && nom){
 		console.log("prospection d'une simple sarl");
 		pdf3(paquets, data, faxx);
 		}
-	}else if((formeJuridique.indexOf("SAS ") > -1)){
+	}else if((formeJuridique.indexOf("Société par actions simplifiée") > -1)){
 		console.log("--------------prospection d'une SAS --------------");
 		if((evolution_CA == "+")&&(evolution_RN == "+")){
 		console.log("----------------prospection d'une sas croissante-------------------------");
@@ -54,15 +54,15 @@ exports.sendFax = function(that, fonc, data, dirigeant, nom, adresse, formeJurid
 	var i = 0;
 	var tempo = setInterval(function (){
 		if(data[i]){
-			// d = data[i].toString();
-			// d = d.substr(1);
-			// d = "33"+d;
-			// d = d.replace(" ", "");
-			// d = d.replace(" ", "");
-			// d = d.replace(" ", "");
-			// d = d.replace(" ", "");
-			// console.log(d);
-			var d = ['33148241089', '33148241089', '33148241089']; //todo sup -> juste pour test
+			d = data[i].toString();
+			d = d.substr(1);
+			d = "33"+d;
+			d = d.replace(" ", "");
+			d = d.replace(" ", "");
+			d = d.replace(" ", "");
+			d = d.replace(" ", "");
+			console.log(d);
+			// var d = ['33148241089', '33148241089', '33148241089']; //todo sup -> juste pour test
 			envoyer(d, data[i], nom[i], adresse[i], dirigeant[i++], formeJuridique, capitalSocial, evolution_CA, evolution_RN);
 		}else{
 			clearInterval(tempo);
@@ -72,6 +72,23 @@ exports.sendFax = function(that, fonc, data, dirigeant, nom, adresse, formeJurid
 }
 //------------------------------------------------------------------------------------------------------------
 pdf1 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -99,18 +116,18 @@ pdf1 = function(paquets, data, faxx){
 	if(paquets.nom){
 	text0 = ""+paquets.name+" "+paquets.type+"\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
 	text0 = ""+paquets.name+"\n"+
 	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprise avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
@@ -125,16 +142,16 @@ pdf1 = function(paquets, data, faxx){
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de "+paquets.capital+" €, a retenue notre attention en raison de son potentiel de croissance.\n\n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de "+capital+" €, a retenu notre attention en raison de son potentiel de croissance.\n\n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
 	paquets.name+", ayant la forme de SA, pourrait avoir son marché d’actions : Carnet d’annonces, Marché Libre ou Alternext (1).\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre primier diagnostic.\n\n";
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
 	doc.fontSize(10).text(text4, 100, 380);
 	
 	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :\n\n"; 
-	doc.fontSize(10).text(text5, 100, 410);
+	doc.fontSize(10).text(text5, 100, 415);
 	
 	text6 = "améliorer la visibilité commerciale de l’entreprise \n"+
 	"réaliser des augmentations de capital en restant indépendant \n"+
@@ -154,10 +171,10 @@ pdf1 = function(paquets, data, faxx){
 	doc.image('./puce.JPEG', 100, 452);
 	doc.image('./puce.JPEG', 100, 464);
 	doc.image('./puce.JPEG', 100, 476);
-	doc.image('./ciib.JPEG', 300, 590);
+	doc.image('./ciib.JPEG', 300, 580);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(8).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -172,6 +189,23 @@ pdf1 = function(paquets, data, faxx){
 //------------------------------------------------------------------------------------------------------------
 
 pdf2 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -199,18 +233,17 @@ pdf2 = function(paquets, data, faxx){
 	if(paquets.nom){
 	text0 = ""+paquets.name+" "+paquets.type+"\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
-	text0 = ""+paquets.name+"\n"+
-	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	text0 = ""+paquets.name+" SA\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprise avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
@@ -225,39 +258,39 @@ pdf2 = function(paquets, data, faxx){
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+paquets.capital+" €, a retenue toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+capital+" €, a retenu toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
 	paquets.name+", ayant la forme de SA, pourrait avoir son marché d’actions : Carnet d’annonces, Marché Libre ou Alternext (1).\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre primier diagnostic.\n\n";
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
 	doc.fontSize(10).text(text4, 100, 410);
 	
-	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :.\n\n"; 
-	doc.fontSize(10).text(text5, 100, 380);
+	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :\n\n"; 
+	doc.fontSize(10).text(text5, 100, 445);
 	
 	text6 = "améliorer la visibilité commerciale de l’entreprise \n"+
 	"réaliser des augmentations de capital en restant indépendant \n"+
 	"valoriser les actions des dirigeants et faciliter la transmission \n"+
 	"encourager la participation des salariés.\n\n"; 
-	doc.fontSize(10).text(text6, 120, 440);
+	doc.fontSize(10).text(text6, 120, 470);
 	
 	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text+", l’assurance de nos sentiments les meilleurs.";
-	doc.fontSize(10).text(text7, 120, 500);
+	doc.fontSize(10).text(text7, 120, 530);
 	
 	text8 = "Didier SALWA,"+
 	"Directeur Général";
 	doc.fontSize(10).text(text8, 250, 570);
 	
 	doc.moveDown(15);
-	doc.image('./puce.JPEG', 100, 440);
-	doc.image('./puce.JPEG', 100, 452);
-	doc.image('./puce.JPEG', 100, 464);
-	doc.image('./puce.JPEG', 100, 476);
-	doc.image('./ciib.JPEG', 300, 590);
+	doc.image('./puce.JPEG', 100, 470);
+	doc.image('./puce.JPEG', 100, 482);
+	doc.image('./puce.JPEG', 100, 494);
+	doc.image('./puce.JPEG', 100, 506);
+	doc.image('./ciib.JPEG', 300, 580);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(8).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -271,6 +304,23 @@ pdf2 = function(paquets, data, faxx){
 }
 //------------------------------------------------------------------------------------------------------------
 pdf3 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -296,20 +346,19 @@ pdf3 = function(paquets, data, faxx){
 	
 	
 	if(paquets.nom){
-	text0 = ""+paquets.name+" "+paquets.type+"\n"+
+	text0 = ""+paquets.name+" SARL\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
-	text0 = ""+paquets.name+"\n"+
-	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	text0 = ""+paquets.name+" SARL\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprisE avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
@@ -324,39 +373,39 @@ pdf3 = function(paquets, data, faxx){
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+paquets.capital+" €, a retenue toute notre attention en raison de son potentiel de croissance.   \n \n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+capital+" €, a retenu toute notre attention en raison de son potentiel de croissance.   \n \n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
-	"Toutefois, "+paquets.name+", ayant la forme de SARL, ne pourrait avoir son marché d’actions (Carnet d’annonces, Marché Libre ou Alternext) qu’après transformation en SA (1).\n Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération.\n\n";
+	"Toutefois, "+paquets.name+", ayant la forme de SARL, ne pourrait avoir son marché d’actions (Carnet d’annonces, Marché Libre ou Alternext) qu’après transformation en SA (1).\n\n Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération.\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre primier diagnostic.\n\n";
-	doc.fontSize(10).text(text4, 100, 410);
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
+	doc.fontSize(10).text(text4, 100, 430);
 	
-	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :.\n\n"; 
-	doc.fontSize(10).text(text5, 100, 450);
+	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :\n\n"; 
+	doc.fontSize(10).text(text5, 100, 465);
 	
 	text6 = "améliorer la visibilité commerciale de l’entreprise \n"+
 	"réaliser des augmentations de capital en restant indépendant \n"+
 	"valoriser les actions des dirigeants et faciliter la transmission \n"+
 	"encourager la participation des salariés.\n\n"; 
-	doc.fontSize(10).text(text6, 120, 480);
+	doc.fontSize(10).text(text6, 120, 490);
 	
 	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text+", l’assurance de nos sentiments les meilleurs.";
-	doc.fontSize(10).text(text7, 100, 530);
+	doc.fontSize(10).text(text7, 100, 540);
 	
-	text8 = "Didier SALWA,"+
+	text8 = "Didier SALWA, "+
 	"Directeur Général";
-	doc.fontSize(10).text(text8, 250, 570);
+	doc.fontSize(10).text(text8, 250, 580);
 	
 	doc.moveDown(15);
-	doc.image('./puce.JPEG', 100, 480);
-	doc.image('./puce.JPEG', 100, 492);
-	doc.image('./puce.JPEG', 100, 504);
-	doc.image('./puce.JPEG', 100, 516);
+	doc.image('./puce.JPEG', 100, 490);
+	doc.image('./puce.JPEG', 100, 502);
+	doc.image('./puce.JPEG', 100, 514);
+	doc.image('./puce.JPEG', 100, 526);
 	doc.image('./ciib.JPEG', 300, 590);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(8).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -369,7 +418,24 @@ pdf3 = function(paquets, data, faxx){
 	},1000);
 }
 //------------------------------------------------------------------------------------------------------------
-pdf4 = function(paquets, data){
+pdf4 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -395,20 +461,19 @@ pdf4 = function(paquets, data){
 	
 	
 	if(paquets.nom){
-	text0 = ""+paquets.name+" "+paquets.type+"\n"+
+	text0 = ""+paquets.name+" SARL\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
 	text0 = ""+paquets.name+"\n"+
-	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprise avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
@@ -423,16 +488,16 @@ pdf4 = function(paquets, data){
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+paquets.capital+" €, a retenue toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+capital+" €, a retenu toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
 	"Toutefois, "+paquets.name+", ayant la forme de SARL, ne pourrait avoir son marché d’actions (Carnet d’annonces, Marché Libre ou Alternext) qu’après transformation en SA (1). \n Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération.\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
-	doc.fontSize(10).text(text4, 100, 410);
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
+	doc.fontSize(10).text(text4, 100, 420);
 	
-	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :\n\n"; 
-	doc.fontSize(10).text(text5, 100, 450);
+	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :"; 
+	doc.fontSize(10).text(text5, 100, 455);
 	
 	text6 = "Améliorer la visibilité commerciale de l’entreprise \n"+
 	"Réaliser des augmentations de capital en restant indépendant \n"+
@@ -452,10 +517,10 @@ pdf4 = function(paquets, data){
 	doc.image('./puce.JPEG', 100, 492);
 	doc.image('./puce.JPEG', 100, 504);
 	doc.image('./puce.JPEG', 100, 516);
-	doc.image('./ciib.JPEG', 300, 590);
+	doc.image('./ciib.JPEG', 300, 580);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(8).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -468,7 +533,24 @@ pdf4 = function(paquets, data){
 	},1000);
 }
 //------------------------------------------------------------------------------------------------------------
-pdf5 = function(paquets, data){
+pdf5 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -496,63 +578,65 @@ pdf5 = function(paquets, data){
 	if(paquets.nom){
 	text0 = ""+paquets.name+" "+paquets.type+"\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
-	text0 = ""+paquets.name+"\n"+
-	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	text0 = ""+paquets.name+" "+paquets.type+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprise avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
 		text2 = "Madame,\n";
+		text = "Madame";
 	}else if((paquets.nom) && (paquets.nom[0] == "M")){
 		text2 = "Monsieur,\n";
+		text = "Monsieur";
 	}else{
-	text2 = "Madame, Monsieur\n";
+		text2 = "Madame, Monsieur\n";
+		text = "Madame, Monsieur";
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+paquets.capital+" €, a retenue toute notre attention en raison de son potentiel de croissance. \n \n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+capital+" €, a retenu toute notre attention en raison de son potentiel de croissance. \n \n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
 	"Toutefois, "+paquets.name+", ayant la forme de SAS, ne pourrait avoir son marché d’actions (Carnet d’annonces, Marché Libre ou Alternext) qu’après transformation en SA (1).\n\n"+
 	"Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre primier diagnostic.\n\n";
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
 	doc.fontSize(10).text(text4, 100, 410);
 	
 	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :\n\n"; 
-	doc.fontSize(10).text(text5, 100, 380);
+	doc.fontSize(10).text(text5, 100, 445);
 	
 	text6 = "améliorer la visibilité commerciale de l’entreprise \n"+
 	"réaliser des augmentations de capital en restant indépendant \n"+
 	"valoriser les actions des dirigeants et faciliter la transmission \n"+
 	"encourager la participation des salariés.\n\n"; 
-	doc.fontSize(10).text(text6, 120, 440);
+	doc.fontSize(10).text(text6, 120, 470);
 	
-	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text2+", l’assurance de nos sentiments les meilleurs.";
-	doc.fontSize(10).text(text7, 120, 500);
+	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text+", l’assurance de nos sentiments les meilleurs.";
+	doc.fontSize(10).text(text7, 120, 520);
 	
 	text8 = "Didier SALWA,"+
 	"Directeur Général";
 	doc.fontSize(10).text(text8, 250, 570);
 	
 	doc.moveDown(15);
-	doc.image('./puce.JPEG', 100, 440);
-	doc.image('./puce.JPEG', 100, 452);
-	doc.image('./puce.JPEG', 100, 464);
-	doc.image('./puce.JPEG', 100, 476);
-	doc.image('./ciib.JPEG', 300, 590);
+	doc.image('./puce.JPEG', 100, 470);
+	doc.image('./puce.JPEG', 100, 482);
+	doc.image('./puce.JPEG', 100, 494);
+	doc.image('./puce.JPEG', 100, 506);
+	doc.image('./ciib.JPEG', 300, 580);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(10).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -566,6 +650,23 @@ pdf5 = function(paquets, data){
 }
 //-------------------------------------------------------------------------------------------------------------
 pdf6 = function(paquets, data, faxx){
+	var capital = +paquets.capital;
+	if(capital < 100000){
+		capital = ""+capital;
+		capital = capital.slice(0, 2);
+		capital+= " 000";
+		console.log(capital);
+	}else if((capital >= 100000) && (capital < 1000000)){
+		capital = ""+capital;
+		capital = capital.slice(0, 3);
+		capital+= " 000";
+		console.log(capital);
+	}else{
+		capital = ""+capital;
+		capital = capital.slice(0, 1);
+		capital+= " 000 000";
+		console.log(capital);
+	}
 	var date = new Date();
 	mois = date.getMonth()+1;
 	jour = date.getDate();
@@ -591,65 +692,67 @@ pdf6 = function(paquets, data, faxx){
 	
 	
 	if(paquets.nom){
-	text0 = ""+paquets.name+" "+paquets.type+"\n"+
+	text0 = ""+paquets.name+" SAS\n"+
 	"A l'attention de "+paquets.nom+"\n"+
-	""+paquets.adresse+"\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le, "+jour+"/"+mois+"/"+date.getFullYear();
 	}else{
-	text0 = ""+paquets.name+"\n"+
-	""+paquets.type+"\n"+
-	""+paquets.adresse+"\n"+
+	text0 = ""+paquets.name+" SAS\n"+
+	""+paquets.adresse+"\n\n"+
 	"Paris le,"+jour+"/"+mois+"/"+date.getFullYear();
 	}
 	doc.fontSize(10).text(text0, 350, 130);
 
 	
-	text1 = "Objet : financement en fonds propres de votre entrepris avec l'actionnariat individuel \n\n";
+	text1 = "Objet : financement en fonds propres de votre entreprise avec l'actionnariat individuel \n\n";
 	doc.fontSize(10).text(text1, 100, 220);
 
 	if((paquets.nom) && (paquets.nom[0] == "M") && (paquets.nom && paquets.nom[1] == "m")){
 		text2 = "Madame,\n";
+		text = "Madame";
 	}else if((paquets.nom) && (paquets.nom[0] == "M")){
 		text2 = "Monsieur,\n";
+		text = "Monsieur";
 	}else{
-	text2 = "Madame, Monsieur\n";
+		text2 = "Madame, Monsieur\n";
+		text = "Madame, Monsieur";
 	}
 	doc.fontSize(10).text(text2, 100, 250);
 	
-	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+paquets.capital+" €, a retenue toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
+	text3 = "D’après vos comptes déposés au Greffe du Tribunal de Commerce, votre entreprise, au capital social de plus de "+capital+" €, a retenue toute notre attention en raison de la croissance de son activité (chiffre d’affaires et résultats).  \n \n"+ 
 	"Nous vous invitons à nous contacter afin de vous informer sur les possibilités de financement en fonds propres de "+paquets.name+" avec l’actionnariat individuel.\n\n"+
 	"Toutefois, "+paquets.name+", ayant la forme de SAS, ne pourrait avoir son marché d’actions (Carnet d’annonces, Marché Libre ou Alternext) qu’après transformation en SA (1).\n\n"+
-	"Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération";
+	"Il se trouve que, d’après vos informations disponibles au greffe du Tribunal de Commerce, le niveau de fonds propres de "+paquets.name+" semble suffisant pour réaliser une telle opération\n\n";
 	doc.fontSize(10).text(text3, 100, 270);
 
-	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'apres vos objectifs de développement, d'affiner notre primier diagnostic.\n\n";
-	doc.fontSize(10).text(text4, 100, 410);
+	text4 = "LE CIIB SA se propose, à la lecture de votre bilan et d'après vos objectifs de développement, d'affiner notre premier diagnostic.\n\n";
+	doc.fontSize(10).text(text4, 100, 430);
 	
 	text5 = "L’utilisation d’un marché d’actions est une décision stratégique pour l'entreprise et une décision de saine gestion du patrimoine de l'entrepreneur :.\n\n"; 
-	doc.fontSize(10).text(text5, 100, 380);
+	doc.fontSize(10).text(text5, 100, 465);
 	
 	text6 = "améliorer la visibilité commerciale de l’entreprise \n"+
 	"réaliser des augmentations de capital en restant indépendant \n"+
 	"valoriser les actions des dirigeants et faciliter la transmission \n"+
 	"encourager la participation des salariés.\n\n"; 
-	doc.fontSize(10).text(text6, 120, 440);
+	doc.fontSize(10).text(text6, 120, 490);
 	
-	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text2+", l’assurance de nos sentiments les meilleurs.";
-	doc.fontSize(10).text(text7, 120, 500);
+	text7 = "Vous en souhaitant bonne réception, veuillez agréer, "+text+", l’assurance de nos sentiments les meilleurs.";
+	doc.fontSize(10).text(text7, 120, 540);
 	
 	text8 = "Didier SALWA,"+
 	"Directeur Général";
 	doc.fontSize(10).text(text8, 250, 570);
 	
 	doc.moveDown(15);
-	doc.image('./puce.JPEG', 100, 440);
-	doc.image('./puce.JPEG', 100, 452);
-	doc.image('./puce.JPEG', 100, 464);
-	doc.image('./puce.JPEG', 100, 476);
-	doc.image('./ciib.JPEG', 300, 590);
+	doc.image('./puce.JPEG', 100, 490);
+	doc.image('./puce.JPEG', 100, 502);
+	doc.image('./puce.JPEG', 100, 514);
+	doc.image('./puce.JPEG', 100, 526);
+	doc.image('./ciib.JPEG', 300, 580);
 	
 	text9 ="(1) En effet, seules les Sociétés Anonymes peuvent avoir leur marché d’actions, avec ou sans la bourse";
-	doc.fontSize(10).text(text9, 100, 690);
+	doc.fontSize(8).text(text9, 100, 670);
 	
 	doc.image('./signaturee.JPEG', -10, 700);
 	doc.end();
@@ -668,13 +771,13 @@ var send = function(data, filname, faxx){
 	d.filenames = './'+filname+'.pdf';
 	console.log("********envoie************");
 	console.log(d);
-	// db.update(faxx); 
+	db.update(faxx); 
 	// Dangereux !!!!! n'oublie pas denvoyer a CIIB pour les tests !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// phaxio.sendFax(d, function(err,res) {
-	// console.log("********envoie************");
-	  // console.log(res);
-	  // console.log(err);
-	// });
+	phaxio.sendFax(d, function(err,res) {
+	console.log("********envoie************");
+	  console.log(res);
+	  console.log(err);
+	});
 }
 //----------------------------------------------TEST----------------------------------
 // var data = new Array();
