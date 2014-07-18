@@ -1,7 +1,6 @@
 {
   "name": "stagess",
   "version": "0.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,8 +17,6 @@
   },
   "homepage": "https://github.com/saratek/Stage_CIIB",
   "dependencies": {
-   
-    
     "mongodb": "^1.4.7",
     "mongoose": "^3.8.13",
     "npm": "^1.4.21",
@@ -27,9 +24,9 @@
     "pdfkit": "^0.6.2",
     "phaxio": "0.0.6",
     "request": "^2.37.0"
-    
   },
   "engines": {
     "node": "0.8.x"
-  }
+  },
+  "devDependencies": {}
 }
