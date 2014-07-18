@@ -1,29 +1,26 @@
 {
-  "name": "stagess",
+  "name": "sara",
   "version": "0.0.0",
   "main": "server.js",
+  "dependencies": {
+    "mongodb": "~1.4.7",
+    "mongoose": "~3.8.13",
+    "pdfkit": "~0.6.2",
+    "phaxio": "~0.0.6"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/saratek/Stage_CIIB"
+    "url": "https://github.com/RomainStage/sara.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/saratek/Stage_CIIB/issues"
+    "url": "https://github.com/RomainStage/sara/issues"
   },
-  "homepage": "https://github.com/saratek/Stage_CIIB",
-  "dependencies": {
-    "mongodb": "1.4.7",
-    "mongoose": "3.8.13",
-    "pdfkit": "0.6.2",
-    "phaxio": "0.0.6"   
-  },
-  "engines": {
-    "node": « 0.6.6 »
-  },
-  "devDependencies": {}
+  "homepage": "https://github.com/RomainStage/sara"
 }
